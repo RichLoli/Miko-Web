@@ -52,86 +52,67 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { reactive, ref, unref } from "vue";
 import { useStore } from 'vuex';
-import { login } from '@/api/login'
 
-export default {
-  name: "LoginForm",
-  setup () {
-    const userLogin = ref(null);
+const userLogin = ref(null);
 
-    const $store = useStore();
+const labelPosition = ref('top')
 
-    const user = reactive({
-      username: "",
-      password: "",
-    });
+const $store = useStore();
 
-    const rules = reactive({
-      username: [
-        {
-          required: true,
-          message: "请输入用户名",
-          trigger: "blur",
-        },
-        {
-          min: 3,
-          max: 20,
-          message: "用户名应为 3-20 个字符",
-          trigger: "blur",
-        },
-      ],
-      password: [
-        {
-          required: true,
-          message: "请输入密码",
-          trigger: "blur",
-        },
-        {
-          min: 6,
-          message: "密码应不少于6位",
-          trigger: "blur",
-        },
-      ],
-    });
+const user = reactive({
+  username: "",
+  password: "",
+});
 
-    const handleLogin = async () => {
-      const form = unref(userLogin);
-      if (!form) return;
-      form.validate((valid) => {
-        if (valid) {
-          console.log("submit!");
-          $store.dispatch("Login", user).then((response) => {
-            console.log(response);
-            // this.ls.set("Access-Token", response.token, 7 * 24 * 60 * 60 * 1000)
-            // this.ls.set("USER_NAME", userLogin.username, 7 * 24 * 60 * 60 * 1000)
-          });
-          // this.$router.push("/");
-        } else {
-          console.log("error submit!");
-          return false;
-        }
+const rules = reactive({
+  username: [
+    {
+      required: true,
+      message: "请输入用户名",
+      trigger: "blur",
+    },
+    {
+      min: 3,
+      max: 20,
+      message: "用户名应为 3-20 个字符",
+      trigger: "blur",
+    },
+  ],
+  password: [
+    {
+      required: true,
+      message: "请输入密码",
+      trigger: "blur",
+    },
+    {
+      min: 6,
+      message: "密码应不少于6位",
+      trigger: "blur",
+    },
+  ],
+});
+
+const handleLogin = async () => {
+  const form = unref(userLogin);
+  if (!form) return;
+  form.validate((valid) => {
+    if (valid) {
+      console.log("submit!");
+      $store.dispatch("Login", user).then((response) => {
+        console.log(response);
+        this.$router.push("/");
+      }).catch((e) => {
+          
       });
-    };
-
-    return {
-      user,
-      rules,
-      userLogin,
-      handleLogin
-    };
-  },
-  data () {
-    return {
-      labelPosition: "top",
-    };
-  },
-  methods: {
-
-  }
-};
+    } else {
+      console.log("error submit!");
+      return false;
+    }
+  });
+}
 </script>
 
 <style>

@@ -1,4 +1,6 @@
-import { login } from '@/api/login'
+import { login, logout } from '@/api/login'
+import { ACCESS_TOKEN } from "@/store/mutation-types"
+
 
 const state = {
   username: '',
@@ -8,18 +10,18 @@ const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
+  SET_PERMISSION_LIST:  () =>{
+
+  }
 }
 
 const actions = {
   Login({ commit }, userInfo) {
-    console.log('123')
     return new Promise((resolve, reject) => {
       login(userInfo)
         .then((response) => {
           if (response.code == '200') {
-            console.log(response)
-            // this.ls.set("Access-Token", response.token, 7 * 24 * 60 * 60 * 1000)
-            // this.ls.set("USER_NAME", userInfo.username, 7 * 24 * 60 * 60 * 1000)
+            localStorage.setItem(ACCESS_TOKEN, response.token)
             commit('SET_TOKEN', response.token)
             resolve(response)
           } else {
@@ -29,6 +31,18 @@ const actions = {
         .catch((error) => {
           reject(error)
         })
+    })
+  },
+  Logout({ commit, state }) {
+    return new Promise((resolve) => {
+      let logoutToken = state.token;
+      commit('SET_TOKEN', '')
+      localStorage.removeItem(ACCESS_TOKEN)
+      logout(logoutToken).then(() => {
+        resolve()
+      }).catch(() => {
+        resolve()
+      })
     })
   },
 }
