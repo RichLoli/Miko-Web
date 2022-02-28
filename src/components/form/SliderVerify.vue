@@ -1,16 +1,19 @@
 <template>
   <div id="slider-verify">
-    <div id="silder-base" :style="sliderStyle">
+    <div></div>
+    <div id="slider-base">
       <span>滑动验证 >>></span>
-      <div id="silder-success" :style="sliderStyle">
-        <div id="slider-drag-block" @mousedown="dragBlock" @mouseup="dragBlockRelease"></div>
+      <div id="slider-success" :class="sliderStyle">
+        <div id="slider-drag-block" :style="sliderStyle" @mousedown="dragBlock">
+          <span>-></span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from 'vue'
+import { defineProps, reactive, ref } from 'vue'
 
 const prop = defineProps({
   height: {
@@ -19,50 +22,82 @@ const prop = defineProps({
   }
 });
 
-const sliderStyle = {
-  height: prop.height
+const releaseCapture = ref(false);
+
+const sliderStyle = reactive({
+  "slider-success-ondrag": false
+})
+
+const dragBlock = (event) => {
+  releaseCapture.value = true;
 }
 
-const dragBlock = (el) => {
-    console.log("鼠标按下");
-    console.log(el);
+const moveSlider = (event) => {
+  if (releaseCapture.value == false) {
+    return;
+  }
+  var slider = document.getElementById("slider-drag-block");
+  let evt = event || window.event;
+  var box = slider.parentNode.getBoundingClientRect();
+  var newLocation = (evt.clientX - box.left) - 20;
+  if (newLocation < 0 || newLocation > 200) {
+    return;
+  }
+  var progress = document.getElementById("silder-success");
+  sliderStyle.left = newLocation + "px";
+  progress.style.width = newLocation + "px";
 }
 
-const dragBlockRelease = () => {
-    console.log("鼠标松开");
+
+document.onmouseup = function (event) {
+  releaseCapture.value = false;
+}
+
+document.onmousemove = function (event) {
+  moveSlider(event)
 }
 
 </script>
 
 <style>
 #slider-verify {
-  width: 100%;
-  border: 1px black solid;
+  margin: 150px auto;
+  width: 300px;
+  height: 250px;
+  background-color: bisque;
 }
 
-#silder-base {
-  background-color: rgb(255, 255, 255);
+#slider-base {
+  color: #45494c;
+  height: 40px;
+  line-height: 40px;
   text-align: center;
-  color: rgb(167, 167, 167);
   user-select: none;
+  position: relative;
+  background-color: #f7f9fa;
 }
 
-#silder-success {
-  width: 100%;
+#slider-success {
   position: absolute;
-  top: 0px;
-  left: -310px;
-  display: flex;
-  justify-content: flex-end;
-  background-color: rgb(78, 211, 89);
-  border: 1px red solid;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  background-color: rgb(137, 202, 255);
+}
+
+.slider-success-ondrag {
+  height: 38px;
+  border: 1px solid rgb(0, 135, 245);
 }
 
 #slider-drag-block {
-    width: 40px;
-    height: 100%;
-    background-color: white;
-    border: 1px blue solid;
-    cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 40px;
+  height: 100%;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.5s ease;
 }
 </style>

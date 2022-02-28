@@ -27,6 +27,11 @@ const routes = [
     ]
   },
   {
+    path: '/test',
+    name: 'test',
+    component: () => import('@/components/form/SliderVerify'),
+  },
+  {
     path: '/:pathMatch(.*)',
     name: '404',
     component: () => import('@/views/error/404'),
@@ -44,7 +49,7 @@ router.beforeEach((to, from, next) => {
   if (to.path.startsWith('/login')) {
     next()
   } else {
-    let token = Cookies.get('token')
+    let token = localStorage.getItem("Access-Token");
     if (undefined == token || null == token || '' === token) {
       console.log('用户未登录')
       next('/login')
