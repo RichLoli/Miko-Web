@@ -9,23 +9,37 @@ const routes = [
     component: () => import('@/views/login'),
     redirect: '/login/',
     children: [
-        {
-            path: '',
-            name: 'LoginForm',
-            component: () => import('@/views/login/form'),
-        },
-        {
-            path: 'forget',
-            name: 'forgetPasswd',
-            component: () => import('@/views/login/forget'),
-        },
-        {
-            path: 'register',
-            name: 'registerUser',
-            component: () => import('@/views/login/register'),
-        }
-    ]
+      {
+        path: '',
+        name: 'LoginForm',
+        component: () => import('@/views/login/form'),
+      },
+      {
+        path: 'forget',
+        name: 'forgetPasswd',
+        component: () => import('@/views/login/forget'),
+      },
+      {
+        path: 'register',
+        name: 'registerUser',
+        component: () => import('@/views/login/register'),
+      },
+    ],
   },
+  {
+    path: '/home',
+    name: 'Layout',
+    component: () => import('@/components/layout/Layout'),
+    redirect: '/home/',
+    children: [
+      {
+        path: '/home',
+        name: 'home',
+        component: () => import('@/views/home'),
+      },
+    ],
+  },
+
   {
     path: '/test',
     name: 'test',
@@ -49,7 +63,7 @@ router.beforeEach((to, from, next) => {
   if (to.path.startsWith('/login')) {
     next()
   } else {
-    let token = localStorage.getItem("Access-Token");
+    let token = localStorage.getItem('Access-Token')
     if (undefined == token || null == token || '' === token) {
       console.log('用户未登录')
       next('/login')

@@ -126,7 +126,28 @@ const initImages = () => {
   })
 
   var draw = (img) => {
+    var x = 20
+    var y = 20
+    const l = 42 // 滑块边长
+    const r = 9 // 滑块半径
+    const PI = Math.PI
+    const L = l + r * 2 + 3 // 滑块实际边长
     canvasCtx.drawImage(img, 0, 0);
+    canvasCtx.beginPath()
+    canvasCtx.moveTo(x, y)
+    canvasCtx.arc(x + l / 2, y - r + 2, r, 0.72 * PI, 2.26 * PI)
+    canvasCtx.lineTo(x + l, y)
+    canvasCtx.arc(x + l + r - 2, y + l / 2, r, 1.21 * PI, 2.78 * PI)
+    canvasCtx.lineTo(x + l, y + l)
+    canvasCtx.lineTo(x, y + l)
+    canvasCtx.arc(x + r - 2, y + l / 2, r + 0.4, 2.76 * PI, 1.24 * PI, true)
+    canvasCtx.lineTo(x, y)
+    canvasCtx.lineWidth = 2
+    canvasCtx.fillStyle = 'rgba(255, 255, 255, 0.7)'
+    canvasCtx.strokeStyle = 'rgba(255, 255, 255, 0.7)'
+    canvasCtx.stroke()
+    canvasCtx.globalCompositeOperation = 'destination-over'
+    canvasCtx.fill()
   }
 }
 

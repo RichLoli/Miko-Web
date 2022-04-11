@@ -55,12 +55,14 @@
 <script setup>
 import { reactive, ref, unref } from "vue";
 import { useStore } from 'vuex';
+import { useRouter} from "vue-router"
 
 const userLogin = ref(null);
 
 const labelPosition = ref('top')
 
 const $store = useStore();
+const $router = useRouter();
 
 const user = reactive({
   username: "",
@@ -103,7 +105,7 @@ const handleLogin = async () => {
       console.log("submit!");
       $store.dispatch("Login", user).then((response) => {
         console.log(response);
-        this.$router.push("/");
+        $router.push("/home");
       }).catch((e) => {
           
       });
